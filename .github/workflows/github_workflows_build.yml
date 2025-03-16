@@ -26,7 +26,7 @@ jobs:
     - name: build
       shell: cmd
       run: |
-        cmake -B build -S . -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH=$env:QTDIR  -DCMAKE_BUILD_TYPE=Release
+        cmake -B build -S .${{ github.workspace }}  -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH=$env:QTDIR  -DCMAKE_BUILD_TYPE=Release
         cd build
         ls
         mingw32-make -f CMakeLists.txt -j16
