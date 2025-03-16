@@ -1,46 +1,46 @@
-name: ActionsCI
-
-env:
-  Platform: #Any CPU|Win32|x64
-  Configuration: Release
-  Artifacts: build/Release/
+name: Build Qt 6 Program
 
 on:
   push:
-    branches: [master, develop]
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build-windows-qt68:
+  build:
     runs-on: windows-latest
+
     steps:
-    - uses: actions/checkout@main
-    - name: Install Qt
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version:      6.8.2
-        host:         windows
-        target:       desktop
-        arch:       win64_mingw
-        modules:      qtmultimedia
-        setup-python: false
-    - name: build
-      shell: cmd
+        version: '6.8.2'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_mingw'
+        dir: 'C:/Qt'
+
+    - name: Set up MinGW
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          mingw-w64-x86_64-toolchain
+          mingw-w64-x86_64-cmake
+
+    - name: Add Qt and MinGW to PATH
       run: |
-       cmake -B./build -S. ${{ github.workspace }} -G "MinGW Makefiles" \
-          -DAPP_ARCHITECTURE=x64 \
-          -DAPP_EXECUTABLE_FILENAME=${{ env.APP_EXECUTABLE_FILENAME }}
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-          -DCMAKE_PREFIX_PATH=${{ env.Qt6_Dir }}
-        cmake --build ./build --config release
-    - name: deploy
-      run: windeployqt.exe build\Release\sans_titre.exe
-    - name: Compress artifacts
-      uses: vimtor/action-zip@v1.1
-      with:
-        files: build\Release
-        dest: "build/sans_titre.zip"
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: sans_titre.zip
-        path: build\Release
+        echo "C:/Qt/6.2.0/mingw81_64/bin" >> $GITHUB_PATH
+        echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
+
+    - name: Build project
+      run: |
+        mkdir build
+        cd build
+        cmake -G "MinGW Makefiles" ..
+        mingw32-make
