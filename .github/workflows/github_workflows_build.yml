@@ -23,15 +23,10 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_mingw'
-        dir: 'C:/Qt'
+        tools: 'tools_mingw1310'
+        
+    - name: Configure CMake
+        run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{env.Qt6_Dir}}" -G "MinGW Makefiles" -B ${{github.workspace}}/build-${{ runner.os }}
 
-    - name: Add Qt and MinGW to PATH
-      run: |
-        echo "C:\Qt\Qt\6.8.2\mingw_64/bin" >> $GITHUB_PATH
-
-    - name: Build project
-      run: |
-        mkdir build
-        cd build
-        cmake -G "MinGW Makefiles" ..
-        mingw32-make
+    - name: Build
+        run: cmake --build ${{github.workspace}}/build-${{ runner.os }} --config Release
