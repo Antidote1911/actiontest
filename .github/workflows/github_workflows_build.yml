@@ -25,18 +25,9 @@ jobs:
         arch: 'win64_mingw'
         dir: 'C:/Qt'
 
-    - name: Set up MinGW
-      uses: msys2/setup-msys2@v2
-      with:
-        update: true
-        install: >-
-          mingw-w64-x86_64-toolchain
-          mingw-w64-x86_64-cmake
-
     - name: Add Qt and MinGW to PATH
       run: |
-        echo "C:/Qt/6.2.0/mingw81_64/bin" >> $GITHUB_PATH
-        echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
+        echo "C:/Qt/mingw81_64/bin" >> $GITHUB_PATH
 
     - name: Build project
       run: |

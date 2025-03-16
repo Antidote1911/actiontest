@@ -3,7 +3,7 @@ project(sans_titre LANGUAGES CXX)
 
 find_package(Qt6 6.8.2 REQUIRED COMPONENTS Core Widgets)
 set(CMAKE_CXX_STANDARD 20)
-add_definitions(-D__argc=__argc -D__argv=__argv)
+
 qt_standard_project_setup()
 
 qt_add_executable(sans_titre
@@ -22,15 +22,3 @@ target_link_libraries(sans_titre
 
 include(GNUInstallDirs)
 
-install(TARGETS sans_titre
-    BUNDLE  DESTINATION .
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
-
-qt_generate_deploy_app_script(
-    TARGET sans_titre
-    OUTPUT_SCRIPT deploy_script
-    NO_UNSUPPORTED_PLATFORM_ERROR
-)
-install(SCRIPT ${deploy_script})
