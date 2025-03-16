@@ -26,10 +26,12 @@ jobs:
     - name: build
       shell: cmd
       run: |
-        cmake -B build -S .${{ github.workspace }}  -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH=$env:QTDIR  -DCMAKE_BUILD_TYPE=Release
-        cd build
-        ls
-        mingw32-make -f CMakeLists.txt -j16
+       cmake -B./build -S. ${{ github.workspace }} \
+          -DAPP_ARCHITECTURE=x64 \
+          -DAPP_EXECUTABLE_FILENAME=${{ env.APP_EXECUTABLE_FILENAME }}
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          -DCMAKE_PREFIX_PATH=${{ env.Qt6_Dir }} -G "MinGW Makefiles"
+        cmake --build ./build --config release
     - name: deploy
       run: windeployqt.exe build\Release\sans_titre.exe
     - name: Compress artifacts
