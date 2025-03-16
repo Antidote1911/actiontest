@@ -26,11 +26,11 @@ jobs:
     - name: build
       shell: cmd
       run: |
-       cmake -B./build -S. ${{ github.workspace }} \
+       cmake -B./build -S. ${{ github.workspace }} -G "MinGW Makefiles" \
           -DAPP_ARCHITECTURE=x64 \
           -DAPP_EXECUTABLE_FILENAME=${{ env.APP_EXECUTABLE_FILENAME }}
           -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-          -DCMAKE_PREFIX_PATH=${{ env.Qt6_Dir }} -G "MinGW Makefiles"
+          -DCMAKE_PREFIX_PATH=${{ env.Qt6_Dir }}
         cmake --build ./build --config release
     - name: deploy
       run: windeployqt.exe build\Release\sans_titre.exe
