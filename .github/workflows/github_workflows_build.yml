@@ -29,7 +29,7 @@ jobs:
         cmake -B build -S . -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH=$env:QTDIR  -DCMAKE_BUILD_TYPE=Release
         cd build
         ls
-        mingw32-make -j16
+        mingw32-make -f CMakeLists.txt -j16
     - name: deploy
       run: windeployqt.exe build\Release\sans_titre.exe
     - name: Compress artifacts
